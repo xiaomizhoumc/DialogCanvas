@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "id": "menu_shop",
+  "title": "&6武器商店",
+  "dialogType": "multi_action",
+  "canCloseWithEscape": true,
+  "afterAction": "CLOSE",
+  "externalTitle": "武器商店",
+  "pause": false,
+  "columns": 2,
+  "body": [
+    {"type": "text", "text": "请选择你要购买的武器", "colorMode": "solid", "color": "#FFFFFF", "width": 200},
+    {
+      "type": "item", "material": "DIAMOND_SWORD", "name": "&6传说之剑",
+      "lore": ["&7攻击力 +100", "&7单价 1000 金币"], "amount": 1, "glow": true,
+      "description": {"text": "传说之剑展示", "width": 200},
+      "showDecorations": true, "showTooltip": true, "width": 16, "height": 16
+    }
+  ],
+  "inputs": [
+    {"type": "number_range", "key": "amount", "label": "购买数量", "start": 1.0, "end": 3.0, "step": 1.0, "initial": 1.0, "width": 200, "labelFormat": "%s: %s"},
+    {"type": "bool", "key": "confirm", "label": "确认购买", "initial": false, "onTrue": "yes", "onFalse": "no"},
+    {"type": "text", "key": "note", "label": "备注", "initial": "", "maxLength": 32, "width": 200, "labelVisible": true, "multiline": {"maxLines": 2, "height": 40}},
+    {"type": "single_option", "key": "delivery", "label": "领取方式", "width": 200, "labelVisible": true, "options": [{"id": "inventory", "display": "背包", "initial": true}]}
+  ],
+  "actions": [
+    {
+      "id": "buy_sword", "type": "button", "label": "&a确认购买", "tooltip": "点击购买传说之剑", "width": 150,
+      "actionType": "custom", "actionId": "dialogcanvas:buy_sword",
+      "conditions": {
+        "operator": "AND", "items": [
+          {"type": "permission", "permission": "shop.buy.legendary", "negate": false},
+          {"type": "placeholder", "placeholder": "%vault_eco_balance%", "operator": ">=", "value": "1000 * $(amount)"},
+          {"type": "input", "key": "confirm", "operator": "==", "value": "true"},
+          {"operator": "OR", "items": [{"type": "player_data", "key": "shop.enabled", "operator": "==", "value": "true"}]}
+        ]
+      },
+      "actions": [
+        {"type": "economy_withdraw", "amount": "1000 * $(amount)", "delay": 0, "chance": 1.0},
+        {"type": "give_item", "material": "DIAMOND_SWORD", "amount": "$(amount)", "name": "&6传说之剑", "lore": ["&7攻击力 +100"], "glow": true},
+        {"type": "message", "text": "&a购买成功！"},
+        {"type": "play_sound", "sound": "ENTITY_PLAYER_LEVELUP", "volume": 1.0, "pitch": 1.0}
+      ],
+      "denyActions": [{"type": "message", "text": "&c条件不满足，无法购买。"}, {"type": "return"}],
+      "limit": {"buy": {"player": 3, "server": -1, "reset": "DAILY"}},
+      "cooldown": {"buy": 0}, "refreshAfterAction": true
+    },
+    {"id": "cancel", "type": "button", "label": "&c取消", "width": 150, "actionType": "close", "actions": [], "denyActions": []}
+  ],
+  "metadata": {"created": "2026-10-09T10:00:00Z", "updated": "2026-10-09T10:00:00Z", "version": 1, "author": "server_owner"}
+}

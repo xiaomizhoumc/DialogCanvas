@@ -1,0 +1,1 @@
+const fixtureAsset = true;
