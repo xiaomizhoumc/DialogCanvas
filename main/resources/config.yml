@@ -1,0 +1,29 @@
+# Only a loopback HTTP listener is supported.
+bind-address: '127.0.0.1'
+port: 8080
+
+# Empty on first run: generate a random password, atomically save its BCrypt hash,
+# then print the initial password once to the server console. Never put plaintext here.
+password-hash: ''
+
+# Relative to the plugin's data folder.
+data-directory: 'data'
+
+# 玩家限购失效条目的安全归档；不是按离线天数或文件修改时间删除玩家数据。
+# 默认不自动执行；启用后默认也只检查。明确改为 archive 才会备份后移除过期条目。
+# 业务 JSON、永久限购、pending 预留、未决交易、恢复记录与备份全部保留。
+# 旧限购缺少可靠元数据时跳过。不会删除整个玩家 YAML。
+player-data-retention:
+  enabled: false
+  mode: dry-run # dry-run 或 archive
+  on-startup: true # 生产数据服务就绪后
+  daily: true # 就绪后每 24 小时；文件操作均在后台
+  expired-days: 30 # 计数与冷却均到期后额外保留的天数，不是玩家离线天数
+  batch-size: 20
+
+# 菜单命令由服主配置，DCMenu 不使用命令允许列表、不额外检查目标命令权限。
+# 玩家使用自己的权限；OP 在命令调用期间临时提升，finally 恢复原状态；控制台没有玩家位置。
+# 原版命令可使用 minecraft:gamemode 等完整名称；其他插件命令由 Bukkit 正常分发。
+# 权限由原版或目标插件按所选执行身份检查。旧 actions.allowed-*-commands 已停用，无需修改。
+# 固定参数支持选择器、坐标、中文及 JSON；禁止换行/控制字符，输入变量不能注入新参数。
+# OP 只保证同步调用期间的权限，不保证其他插件延迟执行的命令仍拥有 OP。配置修改后需重启。

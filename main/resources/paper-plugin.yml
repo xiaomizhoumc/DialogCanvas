@@ -1,0 +1,49 @@
+name: DialogCanvas
+version: '${version}'
+main: dialogcanvas.DialogEditorPlugin
+api-version: '26.1'
+description: Local web editor for Paper Dialog menus.
+prefix: DCMenu
+authors: [xiaomizhoumc]
+website: https://github.com/xiaomizhoumc/DialogCanvas
+
+dependencies:
+  server:
+    Vault:
+      load: BEFORE
+      required: false
+      join-classpath: true
+    Essentials:
+      load: BEFORE
+      required: false
+      join-classpath: false
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+      join-classpath: true
+
+permissions:
+  dcmenu.shortcut:
+    description: Allows opening the main menu by sneaking and swapping hands.
+    default: true
+  dcmenu.admin:
+    description: Allows access to the DialogCanvas management command.
+    default: op
+  dcmenu.command.help:
+    description: Allows viewing command help without granting other management commands.
+    default: false
+  dcmenu.command.editor:
+    description: Allows viewing the local editor address with editor or edit; web login is still required.
+    default: false
+  dcmenu.command.list:
+    description: Allows listing loaded menu IDs.
+    default: false
+  dcmenu.command.open:
+    description: Allows displaying loaded menus to oneself or any online player.
+    default: false
+  dcmenu.command.reload:
+    description: Allows importing manual menu YAML.
+    default: false
+  dcmenu.command.data:
+    description: Allows player-data maintenance commands; server console restriction still applies.
+    default: false

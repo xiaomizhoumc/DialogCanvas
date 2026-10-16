@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "dialogcanvas_shop_demo",
+  "title": "&6武器商店 · 展示测试",
+  "dialogType": "multi_action",
+  "canCloseWithEscape": true,
+  "afterAction": "NONE",
+  "pause": false,
+  "columns": 2,
+  "body": [
+    {"type": "text", "text": "&e单价 1000 金币；本菜单仅测试展示和回调，不执行购买。", "width": 340},
+    {"type": "item", "material": "DIAMOND_SWORD", "name": "&6传说之剑",
+     "lore": ["&7售价：1000 金币", "&7仅展示，不发放物品"], "amount": 1, "glow": true,
+     "description": {"text": "&b传说之剑\n&7检查物品模型、附魔光效和悬浮说明", "width": 260},
+     "showDecorations": true, "showTooltip": true, "width": 32, "height": 32}
+  ],
+  "inputs": [
+    {"type": "number_range", "key": "amount", "label": "购买数量", "start": 1.0, "end": 3.0, "step": 1.0, "initial": 1.0, "width": 240},
+    {"type": "bool", "key": "confirm", "label": "确认购买（仅控件测试）", "initial": false},
+    {"type": "text", "key": "note", "label": "备注", "initial": "", "maxLength": 32, "width": 240}
+  ],
+  "actions": [
+    {"id": "shop_buy_demo", "type": "button", "icon": {"type": "item", "material": "DIAMOND_SWORD"},
+     "label": "&a购买回调测试", "tooltip": "&7只输出按钮 ID，不执行扣款、限购或发货", "width": 160,
+     "actionType": "custom", "callbackOptions": {"uses": 64}},
+    {"id": "shop_info_demo", "type": "button", "label": {"format": "minimessage", "value": "<yellow>商品说明测试</yellow>"},
+     "tooltip": "&7检查无图标按钮与 MiniMessage", "width": 160, "actionType": "custom", "callbackOptions": {"uses": 64}}
+  ],
+  "exitAction": {"id": "shop_close", "type": "button", "label": "&c关闭商店", "actionType": "close", "width": 160}
+}

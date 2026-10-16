@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "dialogcanvas_test",
+  "title": "&6DCMenu 真机测试",
+  "dialogType": "notice",
+  "canCloseWithEscape": true,
+  "afterAction": "NONE",
+  "pause": false,
+  "body": [
+    {"type": "text", "text": "&f如果你看到这段文字，Dialog 菜单已成功显示。"}
+  ],
+  "noticeAction": {
+    "id": "test_close",
+    "type": "button",
+    "label": "&a关闭（测试回调）",
+    "actionType": "close"
+  }
+}
