@@ -2,8 +2,6 @@
 
 [返回 Wiki 首页](../README.md) · [项目入口](../../../README.md)
 
-> 适用：DialogCanvas 1.0.0，Paper 26.1～26.3 系列（构建范围见最终验收）；核对日期：2026-10-16。
-
 **前置知识：** 安装并登录；游戏玩家有 dcmenu.admin 或 dcmenu.command.open。
 
 ## 路线 A：从网页空白菜单开始
