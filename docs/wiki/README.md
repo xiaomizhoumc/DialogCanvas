@@ -1,6 +1,6 @@
 # DCMenu 中文 Wiki
 
-[返回项目入口](../../README.md) · [开发文档](../../DEVELOPER.md)
+[返回项目入口](../../README.md)
 
 > 当前使用入口；适用 DialogCanvas 1.0.0 / Paper 26.1～26.3 系列（构建范围见最终验收），核对日期 2026-10-16。
 
