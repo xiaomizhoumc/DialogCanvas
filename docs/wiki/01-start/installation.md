@@ -12,10 +12,10 @@
 
 ## 首次安装
 
-当前插件还会生成 `plugins/DialogCanvas/examples/menus/` 下十份完整中文注释教学 YAML，附 `examples/使用说明.md`；后续启动只补齐缺失文件，已有内容保留。它们是按需导入的教学原件，不会因文件生成自动加载菜单或执行商店交易。详见 [内置示例说明](../../../BUNDLED_EXAMPLES.md)。
+当前插件还会生成 `plugins/DialogCanvas/examples/menus/` 下十份完整中文注释教学 YAML，附 `examples/使用说明.md`；后续启动只补齐缺失文件，已有内容保留。它们是按需导入的教学原件，不会因文件生成自动加载菜单或执行商店交易。
 
 1. 正常 `stop`，等世界保存和 Java 进程退出。备份服务器。
-2. 将构建产物 `plugin/build/libs/DialogCanvas-1.0.0-Paper-26.1-26.3.jar` 放入服务器 `plugins/`，只保留一个本插件 JAR。**不要在运行中覆盖 JAR 后再 stop**，旧类加载器收尾会受损。
+2. 将插件 放入服务器 `plugins/`，只保留一个本插件 JAR。**不要在运行中覆盖 JAR 后再 stop**，旧类加载器收尾会受损。
 3. 启动，等待服务器及 DCMenu 后台初始化就绪。首次没有密码哈希时，控制台显示一次“DCMenu 首次初始化密码（仅此一次显示，请妥善保存）”。立即妥善保存；插件正常日志不保存明文，启动器录屏/重定向可能例外。
 4. 控制台输入 `dcmenu editor`，复制实际输出地址，在**服务器电脑**浏览器打开。默认 `http://127.0.0.1:8080/`，配置端口改变后以命令为准。
 5. 顶部“管理员密码”填首次密码，点击“登录”。不要把密码拼在 URL 后。
@@ -42,10 +42,10 @@
 
 ## 相关章节
 
-[十分钟入门](first-menu.md) · [配置](../05-operations/configuration.md) · [认证专题](../../../AUTHENTICATION.md)
+[十分钟入门](first-menu.md) · [配置](../05-operations/configuration.md) 
 
 ---
 
 [上一章：01.1 插件用途与能力范围](overview.md) · [下一章：01.3 十分钟创建第一个菜单](first-menu.md)
 
-[返回 Wiki 首页](../README.md) · [项目入口](../../../README.md)
+[返回 Wiki 首页](../README.md)
