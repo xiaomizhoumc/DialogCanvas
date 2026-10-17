@@ -1,6 +1,6 @@
 # 01.1 插件用途与能力范围
 
-[返回 Wiki 首页](../README.md) · [项目入口](../../../README.md)
+[返回 Wiki 首页](../README.md) 
 
 ## 它能做什么
 
@@ -35,4 +35,4 @@ DialogCanvas（简称 DCMenu）是 Paper 服务端插件。服主在服务器电
 
 [下一章：01.2 安装、目录与登录](installation.md)
 
-[返回 Wiki 首页](../README.md) · [项目入口](../../../README.md)
+[返回 Wiki 首页](../README.md) 
