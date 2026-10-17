@@ -78,4 +78,4 @@ noticeAction:
 
 [上一章：01.2 安装、目录与登录](installation.md) · [下一章：02.1 菜单管理与保存](../02-editor/management.md)
 
-[返回 Wiki 首页](../README.md) · [项目入口](../../../README.md)
+[返回 Wiki 首页](../README.md) 
