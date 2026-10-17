@@ -1,0 +1,144 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 06：五种条件、嵌套和拒绝分支；条件本身不会扣款发货。
+# 安装 menus/wiki_06_conditions.yml；控制台 dcmenu reload wiki_06_conditions。
+# 游戏 /dcmenu open wiki_06_conditions。
+# 第一按钮不依赖 PAPI；第二按钮需要 PAPI 及实际提供该余额变量的扩展。
+# 第三按钮须先在 wiki_10_player_data 初始化数据；缺失数据是 ERROR，不是假定为 0。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_06_conditions
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&e条件示例'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: multi_action
+# columns：multi_action 每行按钮列数，正整数；例如 2 表示两列，按原生顺序排版，不是自由坐标。
+columns: 1
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE
+# inputs：输入控件列表；每个 key 必须唯一，动作可以通过 $(key) 读取玩家提交的值。
+inputs:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+  - {type: bool, key: confirm, label: '我已确认', initial: false}
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  # start：number_range 滑块最小值，必须小于最大值；这是数值范围，不是时间。
+  # end：number_range 滑块最大值；交易仍会在执行时验证数量、库存和余额。
+  # step：滑块每次变化的步长，应大于 0；物品购买通常用 1，避免提交小数数量。
+  # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+  - {type: number_range, key: amount, label: '数量', start: 1, end: 5, step: 1, initial: 1}
+# actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+actions:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: nested
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '检查嵌套条件'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    conditions:
+      # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+      operator: AND # 分组不写 type，items 从上到下短路。
+      # items：条件组的子条件列表，可继续嵌套分组；按列表顺序短路求值。
+      items:
+        # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+        - type: string
+          # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+          operator: '=='
+          # left：比较左侧的值来源，常用 input、player_data、placeholder 或 literal；不能凭空引用不存在的输入。
+          # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+          # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+          left: {source: input, key: confirm} # key 写 confirm，不写 $(confirm)。
+          # right：比较右侧的值来源；固定目标可用 source: literal，再给 value。
+          # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+          # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+          right: {source: literal, value: 'true'}
+        # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+        - operator: OR # 内层任意一项通过即可。
+          # items：条件组的子条件列表，可继续嵌套分组；按列表顺序短路求值。
+          items:
+            # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+            # permission：需要检查的权限节点，例如 dcmenu.admin；由当前服务器权限系统决定玩家是否拥有。
+            # negate：是否取反正常条件结果；true 取反、false 保持。占位符等解析错误不能因取反变成通过。
+            - {type: permission, permission: dcmenu.admin, negate: false}
+            # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+            - type: numeric
+              # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+              operator: '<='
+              # left：比较左侧的值来源，常用 input、player_data、placeholder 或 literal；不能凭空引用不存在的输入。
+              # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+              # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+              left: {source: input, key: amount}
+              # right：比较右侧的值来源；固定目标可用 source: literal，再给 value。
+              # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+              # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+              right: {source: literal, value: 2}
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    actions: [{type: message, text: '&a条件通过。'}]
+    # denyActions：正常条件不满足时执行的拒绝动作链；条件解析 ERROR 不应被当成普通拒绝继续业务。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    denyActions: [{type: message, text: '&c请勾选确认；普通玩家数量最多选 2。'}]
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: balance_condition
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '可选：检查余额变量'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    conditions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      type: placeholder
+      # placeholder：完整 PAPI 变量，例如 %vault_eco_balance%；需要 PlaceholderAPI 及对应扩展，未解析不是数字 0。
+      placeholder: '%vaultunlocked_eco_balance%' # 仅适用于提供该变量的安装组合，PAPI 本体不保证提供它。
+      # comparison：明确比较方式：numeric 按数字比较，string 按文字比较；解析失败为 ERROR，不当作普通不满足。
+      comparison: numeric # ==/!= 必须明确 comparison，避免猜测。
+      # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+      operator: '>='
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      value: '16' # 简便条件的 value 为字符串。
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    actions: [{type: message, text: '&a余额变量不小于 16；本按钮不扣款。'}]
+    # denyActions：正常条件不满足时执行的拒绝动作链；条件解析 ERROR 不应被当成普通拒绝继续业务。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    denyActions: [{type: message, text: '&e余额变量小于 16。'}]
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: player_flag
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '检查演示玩家数据'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    conditions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      type: player_data
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      key: wiki.flag # 玩家数据键，不是 PAPI 或菜单 ID。
+      # comparison：明确比较方式：numeric 按数字比较，string 按文字比较；解析失败为 ERROR，不当作普通不满足。
+      comparison: string
+      # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+      operator: '=='
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      value: ready
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    actions: [{type: message, text: '&a演示标记已初始化。'}]
+    # denyActions：正常条件不满足时执行的拒绝动作链；条件解析 ERROR 不应被当成普通拒绝继续业务。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    denyActions: [{type: message, text: '&e标记存在但不是 ready。'}]

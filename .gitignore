@@ -1,0 +1,41 @@
+# Frontend dependencies and generated bundles
+frontend/node_modules/
+node_modules/
+frontend/dist/
+.pnpm-store/
+__pycache__/
+*.py[cod]
+
+# Gradle outputs
+.gradle/
+build/
+plugin/build/
+/site/
+
+# Local research checkout, verification output, runtime data, and release binaries
+.references/
+build-reports/
+logs/
+dist/
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Local secrets and signing material
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+.envrc
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

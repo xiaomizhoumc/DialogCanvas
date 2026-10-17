@@ -1,0 +1,90 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 04：四类原生输入；网页输入只是预览，不改变初始配置或执行交易。
+# 安装 menus/wiki_04_inputs.yml；控制台 dcmenu reload wiki_04_inputs。
+# 游戏 /dcmenu open wiki_04_inputs。无外部依赖。
+# 普通备注是文本，不能把它当数值金额计算；本例不保存玩家填写的备注。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_04_inputs
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&b四种输入'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: notice
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE
+# inputs：输入控件列表；每个 key 必须唯一，动作可以通过 $(key) 读取玩家提交的值。
+inputs:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: bool # 勾选框；条件里可以按字符串 true/false 比较。
+    # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+    key: confirm # key 在整个菜单内唯一。
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '确认演示'
+    # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+    initial: false # 布尔值不是字符串 'false'。
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: text
+    # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+    key: note
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '备注'
+    # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+    initial: '' # 普通文本，空字符串合法。
+    # maxLength：文字输入允许的最大长度；初始文字也不能超过此限制。
+    maxLength: 32 # 最大长度为正整数。
+    # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+    width: 200
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: number_range # 滑块，返回数值，可在表达式中使用 $(amount)。
+    # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+    key: amount
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '数量'
+    # start：number_range 滑块最小值，必须小于最大值；这是数值范围，不是时间。
+    start: 1
+    # end：number_range 滑块最大值；交易仍会在执行时验证数量、库存和余额。
+    end: 16
+    # step：滑块每次变化的步长，应大于 0；物品购买通常用 1，避免提交小数数量。
+    step: 1 # 数量使用整数步进。
+    # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+    initial: 1
+    # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+    width: 200
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: single_option # 下拉/单选由客户端原生结构决定。
+    # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+    key: delivery
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '配送方式'
+    # options：single_option 单选项列表；value 必须唯一，display 是给玩家看的文字。
+    options:
+      # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+      - id: normal # 实际回传的是 id，不是 display。
+        # display：单选项显示文字；实际提交的是同项 value，不是这里的显示文字。
+        display: '普通'
+        # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+        initial: true # 最多一个初始项。
+      # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+      - id: express
+        # display：单选项显示文字；实际提交的是同项 value，不是这里的显示文字。
+        display: '加急'
+# noticeAction：notice 提示菜单的唯一按钮配置；不是 multi_action 的按钮列表。
+noticeAction:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  id: submit
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  label: '显示所选数量'
+  # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+  actionType: custom
+  # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+  actions:
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    - type: message
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      text: '&a当前选择 $(amount) 件。' # 这是消息数值模板，不是 PAPI。

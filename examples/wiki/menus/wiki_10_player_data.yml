@@ -1,0 +1,101 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 10：玩家数据写入和增减，无经济依赖，会真实修改点击者 wiki.* 演示数据。
+# 安装 menus/wiki_10_player_data.yml；控制台 dcmenu reload wiki_10_player_data。
+# 游戏 /dcmenu open wiki_10_player_data；先初始化，再点击加一/检查。
+# key 为单个业务键，带点不代表文件路径；不可用来写任意服务器文件。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_10_player_data
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&b玩家业务数据'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: multi_action
+# columns：multi_action 每行按钮列数，正整数；例如 2 表示两列，按原生顺序排版，不是自由坐标。
+columns: 2
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE
+# actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+actions:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: initialize
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '初始化演示数据'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      - {type: player_data_set, key: wiki.flag, value: ready} # JSON 标量可为字符串/布尔/数值，也可用对象。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      - {type: player_data_set, key: wiki.count, value: 0} # 数字 0 与字符串 '0' 不相同。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+      # enabled：这里是玩家业务对象自定义字段，仅保存布尔值；不是菜单启用开关，不会自动赋予权限。
+      - {type: player_data_set, key: wiki.profile, value: {label: '教学', enabled: true}} # 对象只作为业务数据。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      - {type: message, text: '&a已初始化自己的演示数据。'} # 提交后才通知。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: increment
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '计数加一'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+      - {type: player_data_increment, key: wiki.count, amount: '1'} # 数值计算式；不依赖 PAPI。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      - {type: message, text: '&a已将演示计数增加 1。'} # 不虚构读取玩家数据的消息变量。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: check
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '检查计数至少为一'
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    conditions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      type: player_data
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      key: wiki.count
+      # comparison：明确比较方式：numeric 按数字比较，string 按文字比较；解析失败为 ERROR，不当作普通不满足。
+      comparison: numeric # 明确数值比较。
+      # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+      operator: '>='
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      value: '1'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    actions: [{type: message, text: '&a计数至少为一。'}]
+    # denyActions：正常条件不满足时执行的拒绝动作链；条件解析 ERROR 不应被当成普通拒绝继续业务。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    denyActions: [{type: message, text: '&e计数仍小于一，请先加一。'}]
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: subtract
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '计数减一'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+      - {type: player_data_increment, key: wiki.count, amount: '-1'} # 允许负增量，不等于经济扣款。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      - {type: message, text: '&e已减少演示计数 1。'}

@@ -1,0 +1,90 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 05：按钮图标与文字分开，正文物品展示不是实际发货。
+# 安装 menus/wiki_05_text_icons.yml；控制台 dcmenu reload wiki_05_text_icons。
+# 游戏 /dcmenu open wiki_05_text_icons；无需资源包或经济服务。
+# Sprite 采用实际映射，不保证所有 Material 都有可用图标；按钮不支持原生附魔光效。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_05_text_icons
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+# format：TextSpec 文字格式：plain 普通、legacy 颜色码、minimessage 标签；高级格式不一定可视化编辑。
+# value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+title: {format: minimessage, value: '<gradient:#55FFFF:#FF55FF:#FFFF55>彩色菜单</gradient>'}
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: multi_action
+# columns：multi_action 每行按钮列数，正整数；例如 2 表示两列，按原生顺序排版，不是自由坐标。
+columns: 2
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE
+# body：正文列表，按顺序展示 text 文字或 item 物品；展示物品不会发到背包。
+body:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: text
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    # format：TextSpec 文字格式：plain 普通、legacy 颜色码、minimessage 标签；高级格式不一定可视化编辑。
+    # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+    text: {format: minimessage, value: '<bold><#55FF55>绿色粗体</#55FF55></bold> 与普通文字'}
+    # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+    width: 300 # 所有颜色都在 TextSpec 中，不使用旧 color/colorMode。
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: item
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    material: DIAMOND_SWORD # 这里只显示，不会放进背包。
+    # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+    amount: 1
+    # glow：正文物品是否显示附魔闪光；展示闪光不等于真实附魔，不影响 give_item 的商品。
+    glow: true # 仅正文展示覆盖附魔闪光，不赋予真实附魔。
+    # name：自定义物品显示名称，不是注册名；不会仅凭名称生成第三方插件的私有物品。
+    name: '&b展示剑'
+    # lore：物品描述列表，一行一项，可使用文字格式；不是命令，也不是交易效果。
+    lore: ['&7这不是发货物品'] # 悬停描述；不是右侧正文。
+    # description：正文物品旁边的说明文字配置，可与物品同一行展示。
+    description: # 原生物品旁文字，与上面的悬停 lore 分开。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      type: text
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      text: '图标旁边的说明文字'
+      # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+      width: 180
+    # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+    width: 24
+    # height：正文物品图像高度，单位为界面像素；与 width 配合控制展示大小。
+    height: 24
+    # showTooltip：是否显示正文物品的原生悬浮物品说明，true 显示、false 隐藏。
+    showTooltip: true
+# actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+actions:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: pearl
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    # format：TextSpec 文字格式：plain 普通、legacy 颜色码、minimessage 标签；高级格式不一定可视化编辑。
+    # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+    label: {format: minimessage, value: '<gradient:#55FFFF:#AA55FF>末影珍珠</gradient>'}
+    # tooltip：鼠标悬停在按钮上显示的文字，不是物品描述，也不会执行动作。
+    tooltip: '这是悬浮提示；点击只关闭菜单。'
+    # icon：独立按钮图标配置，只使用后端确认的 Sprite 映射；不发物品，按钮图标没有原生附魔闪光。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    icon: {type: item, material: ENDER_PEARL} # 图标不继承 label 的颜色。
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: close
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: stone
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '&7石头'
+    # icon：独立按钮图标配置，只使用后端确认的 Sprite 映射；不发物品，按钮图标没有原生附魔闪光。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    icon: {type: item, material: STONE} # 使用明确的方块 Sprite 映射。
+    # tooltip：鼠标悬停在按钮上显示的文字，不是物品描述，也不会执行动作。
+    # format：TextSpec 文字格式：plain 普通、legacy 颜色码、minimessage 标签；高级格式不一定可视化编辑。
+    # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+    tooltip: {format: plain, value: '没有附魔光效的按钮图标'}
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: close

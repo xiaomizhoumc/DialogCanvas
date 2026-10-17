@@ -1,0 +1,146 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 08：真实橡木原木买卖；需要 Vault 兼容桥和可用的经济提供者，不要求 PAPI。
+# 安装 menus/wiki_08_shop.yml；控制台 dcmenu reload wiki_08_shop。
+# 游戏 /dcmenu open wiki_08_shop。请使用测试账号和测试余额，不在文档校验时点击交易。
+# 买入单价 16，卖出单价 8；显示价格不会自动替你生成经济动作。
+# take_item 只匹配普通原木，背包展示/数量上限不能代替执行时再次核查。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_08_shop
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&6橡木原木商店'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: multi_action
+# columns：multi_action 每行按钮列数，正整数；例如 2 表示两列，按原生顺序排版，不是自由坐标。
+columns: 2
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: NONE # 成功后刷新；不是客户端像素预览接口。
+# body：正文列表，按顺序展示 text 文字或 item 物品；展示物品不会发到背包。
+body:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+  # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+  - {type: text, text: '&e每个买入 16、卖出 8 游戏币；请核对数量后勾选确认。', width: 350}
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+  # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+  # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+  # height：正文物品图像高度，单位为界面像素；与 width 配合控制展示大小。
+  - {type: item, material: OAK_LOG, amount: 1, width: 24, height: 24} # 只展示。
+# inputs：输入控件列表；每个 key 必须唯一，动作可以通过 $(key) 读取玩家提交的值。
+inputs:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+  - {type: bool, key: confirm, label: '确认真实交易', initial: false}
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  # start：number_range 滑块最小值，必须小于最大值；这是数值范围，不是时间。
+  # end：number_range 滑块最大值；交易仍会在执行时验证数量、库存和余额。
+  # step：滑块每次变化的步长，应大于 0；物品购买通常用 1，避免提交小数数量。
+  # initial：输入初始值：勾选为布尔值、文字为字符串、滑块为范围内数字、单选为已有选项的 value。
+  - {type: number_range, key: amount, label: '数量', start: 1, end: 16, step: 1, initial: 1}
+# actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+actions:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: buy
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '&a购买橡木原木'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    conditions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      type: string
+      # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+      operator: '=='
+      # left：比较左侧的值来源，常用 input、player_data、placeholder 或 literal；不能凭空引用不存在的输入。
+      # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      left: {source: input, key: confirm}
+      # right：比较右侧的值来源；固定目标可用 source: literal，再给 value。
+      # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      right: {source: literal, value: 'true'}
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+      - {type: economy_withdraw, amount: '16 * $(amount)'} # 失败则不发货。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+      # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+      - {type: give_item, material: oak_log, amount: '$(amount)'} # 发货失败尝试退款；不是跨插件原子事务。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      - {type: message, text: '&a花费 $(16 * $(amount)) 游戏币，购买橡木原木 ×$(amount)。'} # 总价是消息模板的完整算式。
+    # denyActions：正常条件不满足时执行的拒绝动作链；条件解析 ERROR 不应被当成普通拒绝继续业务。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    denyActions: [{type: message, text: '&c请先勾选确认。'}]
+    # limit：按钮限购规则映射；规则名和按钮身份共同决定计数，不要在正式服随意改名重置额度。
+    limit:
+      # buy：此例的购买规则名；limit.buy 与 cooldown.buy 配套，不是固定保留字，可以给不同规则取不同名字。
+      # player：每位玩家在本规则周期内的数量上限；交易数量计入，不一定按点击次数计数。
+      # server：全服限购当前未实现；示例填 -1 表示不限制，不要设置正数后误以为已接入。
+      # reset：DAILY 每日零点、WEEKLY 周一零点、MONTHLY 每月一日零点、NEVER 永久、TIMED 固定时长；使用服务器时区。
+      buy: {player: 32, server: -1, reset: DAILY} # 每天最多买 32 个，不是 32 次。
+    # cooldown：冷却规则映射，值的单位是秒；成功执行后开始，跨重启保留，不随限购周期清零。
+    # buy：此例的购买规则名；limit.buy 与 cooldown.buy 配套，不是固定保留字，可以给不同规则取不同名字。
+    cooldown: {buy: 2} # 成功后 2 秒，跨重启保留。
+    # refreshAfterAction：成功动作完成后是否重新打开菜单；true 会按配置重建输入，数量/确认可能恢复初始值。
+    refreshAfterAction: true # 重新打开会重置输入及确认框。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: sell
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '&e出售橡木原木'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    conditions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      type: string
+      # operator：条件组用 AND（全部满足）/OR（任一满足）；叶条件比较用 ==、!=、>、>=、<、<= 等受支持运算符。
+      operator: '=='
+      # left：比较左侧的值来源，常用 input、player_data、placeholder 或 literal；不能凭空引用不存在的输入。
+      # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+      # key：输入标识或玩家数据键；输入定义/引用来源处只写 amount，动作表达式引用时才写 $(amount)。
+      left: {source: input, key: confirm}
+      # right：比较右侧的值来源；固定目标可用 source: literal，再给 value。
+      # source：值从哪里读取：literal 固定值、input 本菜单输入、player_data 玩家数据、placeholder 占位符。
+      # value：按当前段的类型填写值：TextSpec 是原始文字，条件是比较目标，单选是实际提交值，业务数据可为 JSON 值。
+      right: {source: literal, value: 'true'}
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+      # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+      - {type: take_item, material: minecraft:oak_log, amount: '$(amount)'} # 数量不足不充值。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+      - {type: economy_deposit, amount: '8 * $(amount)'} # 充值失败尝试返还已收原木。
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      - {type: message, text: '&a出售橡木原木 ×$(amount)，获得 $(8 * $(amount)) 游戏币。'}
+    # denyActions：正常条件不满足时执行的拒绝动作链；条件解析 ERROR 不应被当成普通拒绝继续业务。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    denyActions: [{type: message, text: '&c请先勾选确认。'}]
+    # cooldown：冷却规则映射，值的单位是秒；成功执行后开始，跨重启保留，不随限购周期清零。
+    # sell：此例的出售冷却规则名；出售不会自动返还 buy 的购买额度。
+    cooldown: {sell: 2} # 出售不退还购买额度，也不使用购买限额。
+    # refreshAfterAction：成功动作完成后是否重新打开菜单；true 会按配置重建输入，数量/确认可能恢复初始值。
+    refreshAfterAction: true
+# exitAction：multi_action 原生退出按钮槽位，通常显示在普通按钮网格之外。
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+# label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+# actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+exitAction: {id: exit, label: '离开商店', actionType: close}

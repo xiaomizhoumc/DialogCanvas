@@ -1,0 +1,38 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 01：最小提示菜单，无外部依赖，不发物品、不执行命令。
+# 安装时只复制本 YAML 到插件根目录 menus，文件名必须是 wiki_01_notice.yml。
+# 控制台执行 dcmenu reload wiki_01_notice；成功后在游戏执行 /dcmenu open wiki_01_notice。
+# 若有同名菜单，先换一个合法 ID 和相同文件名，不要覆盖现有文件。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1 # 当前唯一支持的菜单结构版本，不是 revision。
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_01_notice # 1～64 位小写字母、数字、下划线或连字符。
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&6你好，DCMenu' # 字符串简写使用 & 颜色码，必须加引号。
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: notice # 提示菜单只有一个确认按钮；下面显式配置它。
+# canCloseWithEscape：是否允许按 Esc 关闭，true 允许、false 不允许；关闭不等于完成业务确认。
+canCloseWithEscape: true # 允许 Esc 关闭；不代表业务确认。
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE # 点击按钮后关闭，不会暂停服务器。
+# body：正文列表，按顺序展示 text 文字或 item 物品；展示物品不会发到背包。
+body:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: text # 一个正文文本块。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    text: '这是我的第一个菜单。' # 普通中文同样可用字符串简写。
+    # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+    width: 300 # 原生布局宽度，单位为界面像素参数，不是屏幕坐标。
+# noticeAction：notice 提示菜单的唯一按钮配置；不是 multi_action 的按钮列表。
+noticeAction:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  id: close # 按钮 ID 在本菜单中唯一。
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  label: '知道了' # 显示文字与按钮 ID 不同。
+  # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+  actionType: close # 只关闭，不执行条件或业务动作。

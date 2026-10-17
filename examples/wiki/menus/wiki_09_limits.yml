@@ -1,0 +1,110 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 09：五种玩家限购周期和独立冷却；无需经济插件，但点击会真实给 1 块石头。
+# 安装 menus/wiki_09_limits.yml；控制台 dcmenu reload wiki_09_limits。
+# 游戏 /dcmenu open wiki_09_limits；每个按钮使用不同计数身份。
+# 正式环境修改 ID/规则名/scope 或周期前应备份并计划迁移，不靠改名重置额度。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_09_limits
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&e限购周期演示'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: multi_action
+# columns：multi_action 每行按钮列数，正整数；例如 2 表示两列，按原生顺序排版，不是自由坐标。
+columns: 2
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE
+# actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+actions:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: daily
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '每日一块'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+    actions: [{type: give_item, material: stone, amount: '1'}]
+    # limit：按钮限购规则映射；规则名和按钮身份共同决定计数，不要在正式服随意改名重置额度。
+    # gift：此例的赠送规则名；同名规则的限额/冷却用于对应按钮，不是物品注册名。
+    # player：每位玩家在本规则周期内的数量上限；交易数量计入，不一定按点击次数计数。
+    # reset：DAILY 每日零点、WEEKLY 周一零点、MONTHLY 每月一日零点、NEVER 永久、TIMED 固定时长；使用服务器时区。
+    limit: {gift: {player: 1, reset: DAILY}} # 服务器时区每天零点重置。
+    # cooldown：冷却规则映射，值的单位是秒；成功执行后开始，跨重启保留，不随限购周期清零。
+    # gift：此例的赠送规则名；同名规则的限额/冷却用于对应按钮，不是物品注册名。
+    cooldown: {gift: 10} # 冷却独立于重置，单位秒。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: weekly
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '每周一块'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+    actions: [{type: give_item, material: stone, amount: '1'}]
+    # limit：按钮限购规则映射；规则名和按钮身份共同决定计数，不要在正式服随意改名重置额度。
+    # gift：此例的赠送规则名；同名规则的限额/冷却用于对应按钮，不是物品注册名。
+    # player：每位玩家在本规则周期内的数量上限；交易数量计入，不一定按点击次数计数。
+    # reset：DAILY 每日零点、WEEKLY 周一零点、MONTHLY 每月一日零点、NEVER 永久、TIMED 固定时长；使用服务器时区。
+    limit: {gift: {player: 1, reset: WEEKLY}} # 周一零点，不是购买后 7 天。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: monthly
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '每月一块'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+    actions: [{type: give_item, material: stone, amount: '1'}]
+    # limit：按钮限购规则映射；规则名和按钮身份共同决定计数，不要在正式服随意改名重置额度。
+    # gift：此例的赠送规则名；同名规则的限额/冷却用于对应按钮，不是物品注册名。
+    # player：每位玩家在本规则周期内的数量上限；交易数量计入，不一定按点击次数计数。
+    # reset：DAILY 每日零点、WEEKLY 周一零点、MONTHLY 每月一日零点、NEVER 永久、TIMED 固定时长；使用服务器时区。
+    limit: {gift: {player: 1, reset: MONTHLY}} # 每月一日零点，按日历而非固定 30 天。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: never
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '永久一块'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+    actions: [{type: give_item, material: stone, amount: '1'}]
+    # limit：按钮限购规则映射；规则名和按钮身份共同决定计数，不要在正式服随意改名重置额度。
+    # gift：此例的赠送规则名；同名规则的限额/冷却用于对应按钮，不是物品注册名。
+    # player：每位玩家在本规则周期内的数量上限；交易数量计入，不一定按点击次数计数。
+    # server：全服限购当前未实现；示例填 -1 表示不限制，不要设置正数后误以为已接入。
+    # reset：DAILY 每日零点、WEEKLY 周一零点、MONTHLY 每月一日零点、NEVER 永久、TIMED 固定时长；使用服务器时区。
+    limit: {gift: {player: 1, server: -1, reset: NEVER}} # 永久额度不能按离线天数清理。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: timed
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '每分钟一块'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    # amount：正文物品数量为整数；动作数量/金额可填带引号的计算式，如 16 * $(amount)。物品动作最终须为正整数。
+    actions: [{type: give_item, material: stone, amount: '1'}]
+    # limit：按钮限购规则映射；规则名和按钮身份共同决定计数，不要在正式服随意改名重置额度。
+    # gift：此例的赠送规则名；同名规则的限额/冷却用于对应按钮，不是物品注册名。
+    # player：每位玩家在本规则周期内的数量上限；交易数量计入，不一定按点击次数计数。
+    # reset：DAILY 每日零点、WEEKLY 周一零点、MONTHLY 每月一日零点、NEVER 永久、TIMED 固定时长；使用服务器时区。
+    # timedSeconds：TIMED 重置间隔，单位为秒，从首次成功购买开始，后续购买不延长窗口。
+    limit: {gift: {player: 1, reset: TIMED, timedSeconds: 60}} # 首次成功起算，后续购买不延长窗口。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: cooldown_only
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '仅冷却演示'
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    actions: [{type: message, text: '这条消息有 5 秒冷却，不发物品。'}]
+    # cooldown：冷却规则映射，值的单位是秒；成功执行后开始，跨重启保留，不随限购周期清零。
+    # use：此例的使用冷却规则名；允许仅配置冷却而不配置限购。
+    cooldown: {use: 5} # 没有 limit 时仍可设置冷却；未知/未决记录保守保留。

@@ -1,0 +1,50 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 02：确认菜单；无经济依赖，只发一条消息。
+# 安装位置 menus/wiki_02_confirmation.yml，控制台 dcmenu reload wiki_02_confirmation。
+# 游戏 /dcmenu open wiki_02_confirmation；确认和取消分别占原生 yes/no 槽位。
+# 不是购买确认，不会扣款或发货。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1 # 格式版本。
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_02_confirmation # 与文件名一致。
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&e确认示例'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: confirmation # 必须同时提供 yesButton 和 noButton。
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE # 按钮处理后关闭。
+# canCloseWithEscape：是否允许按 Esc 关闭，true 允许、false 不允许；关闭不等于完成业务确认。
+canCloseWithEscape: true
+# body：正文列表，按顺序展示 text 文字或 item 物品；展示物品不会发到背包。
+body:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: text
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    text: '是否向自己发送一条确认消息？' # 显示说明。
+# yesButton：confirmation 的确认按钮；是否交易取决于它内部配置的条件/动作。
+yesButton:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  id: yes # 本菜单唯一。
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  label: '&a确认'
+  # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+  actionType: custom # 处理点击才能运行下面的 actions。
+  # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+  actions:
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    - type: message # 提交后副作用；不可能撤回已发送消息。
+      # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+      text: '&a已确认，这是教学消息。'
+# noButton：confirmation 的取消按钮；通常配置 actionType: close。
+noButton:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  id: no # 不能与 yesButton.id 重复。
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  label: '&c取消'
+  # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+  actionType: close # 只关闭；不要在这里配置期待执行的业务动作。

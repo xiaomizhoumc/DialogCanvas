@@ -1,0 +1,72 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 03：两列导航，必须先导入 wiki_01_notice 和 wiki_02_confirmation。
+# 安装位置 menus/wiki_03_navigation.yml；控制台 dcmenu reload wiki_03_navigation。
+# 游戏 /dcmenu open wiki_03_navigation。
+# 不自动占用快捷主菜单；需要时在网页明确启用，并先取消已有主菜单。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_03_navigation
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&b教学导航'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: multi_action # 正文、输入、按钮按原生结构排列，不能填写 x/y 坐标。
+# columns：multi_action 每行按钮列数，正整数；例如 2 表示两列，按原生顺序排版，不是自由坐标。
+columns: 2 # 两列；按钮宽度另由每个 width 指定。
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: NONE # 交给 open_menu/关闭动作决定后续显示。
+# shortcutEnabled：是否设为 Shift+F 快捷主菜单；全体已保存菜单最多只能有一个 true。
+shortcutEnabled: false # 最多一个正式菜单可以设置 true。
+# body：正文列表，按顺序展示 text 文字或 item 物品；展示物品不会发到背包。
+body:
+  # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+  - type: text
+    # text：文字内容；消息动作可用 $(amount) 或 $(16 * $(amount)) 等模板，amount 必须为已有输入 key。
+    text: '点击按钮打开已经保存的目标菜单。' # 标题不是菜单 ID。
+# actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+actions:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: to_notice
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '提示菜单'
+    # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+    width: 140 # 每个按钮宽度，不是坐标。
+    # icon：独立按钮图标配置，只使用后端确认的 Sprite 映射；不发物品，按钮图标没有原生附魔闪光。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # material：物品注册名；例如 oak_log、minecraft:oak_log。正文是展示，give_item/take_item 才是发货/收物品。
+    icon: {type: item, material: PAPER} # 必须属于 /api/meta 确认的 Sprite 映射。
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      - type: open_menu # 保存时检查目标是否存在。
+        # menuId：open_menu 要打开的已保存菜单 ID，不是标题；目标必须已存在，先导入被引用菜单。
+        menuId: wiki_01_notice
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: to_confirmation
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '确认菜单'
+    # width：原生控件/内容宽度参数，单位为界面像素；不是屏幕横坐标，合法范围以网页元数据和校验结果为准。
+    width: 140
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      - type: open_menu
+        # menuId：open_menu 要打开的已保存菜单 ID，不是标题；目标必须已存在，先导入被引用菜单。
+        menuId: wiki_02_confirmation
+# exitAction：multi_action 原生退出按钮槽位，通常显示在普通按钮网格之外。
+exitAction: # 原生退出槽位，和 actions 列表分开。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  id: exit
+  # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+  label: '关闭导航'
+  # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+  actionType: close

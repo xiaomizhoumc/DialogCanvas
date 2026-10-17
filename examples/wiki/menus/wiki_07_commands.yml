@@ -1,0 +1,81 @@
+# ===== DCMenu 完整中文注释教学原件 =====
+# 首次启动生成于 plugins/DialogCanvas/examples/menus/，不会自动加载或执行交易。
+# 按需在网页“导入 YAML”→核对预览→确认草稿→校验→保存；或复制到插件根 menus 后 dcmenu reload。
+# 导航示例先安装01、02再安装03；勿覆盖已有同名菜单，勿手改正式 JSON 或同步基线。
+# 网页保存会规范化正式 YAML 并丢弃手写注释；本教学原件不会被保存操作覆盖。
+# 附近的注释解释同一行各字段；注释不属于配置，不会进入 JSON 或发送给客户端。
+# 教程 07：三种执行身份；点击会实际分发原版命令，本例只发送聊天信息。
+# 安装 menus/wiki_07_commands.yml；控制台 dcmenu reload wiki_07_commands。
+# 游戏 /dcmenu open wiki_07_commands；OP 和控制台按钮另加管理员条件。
+# 网页显示一条完整命令，YAML 仍分为 command 和 arguments；command 不带 /。
+# DCMenu 没有命令允许列表，权限由原版或目标插件按执行身份判断。
+# schemaVersion：菜单文档格式版本，当前填整数 1；不是插件版本，也不是 API 的 revision。
+schemaVersion: 1
+# id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+id: wiki_07_commands
+# title：菜单顶部标题；字符串支持 & 颜色码。带 &、#、冒号等特殊字符的文字要加引号。
+title: '&e命令身份'
+# dialogType：菜单类型：notice 为提示，confirmation 为确认/取消，multi_action 为多按钮。修改时须使用对应按钮槽位。
+dialogType: multi_action
+# columns：multi_action 每行按钮列数，正整数；例如 2 表示两列，按原生顺序排版，不是自由坐标。
+columns: 1
+# afterAction：点击后的原生行为：CLOSE 关闭，NONE 保持，WAIT_FOR_RESPONSE 等待服务器响应；业务动作另在 actions 配置。
+afterAction: CLOSE
+# actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+actions:
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: player_message
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '玩家身份私信自己'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      - type: command
+        # executor：命令执行身份：player 玩家原权限，op 临时管理员（同步执行后恢复），console 服务器控制台。
+        executor: player # 使用点击玩家现有权限，不额外授权。
+        # command：命令名称/命令文本，按当前模型与 arguments 组合执行；不加开头 /，目标插件负责自身命令权限。
+        command: minecraft:tell
+        # arguments：命令参数列表，每个元素一个参数；与 command 一起分发。动态玩家输入受参数校验，不能注入额外命令。
+        arguments: ['{player}', '来自玩家身份的教学消息'] # 每项为固定参数片段；动态输入限制更严格。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: op_message
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: 'OP 身份发消息'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # permission：需要检查的权限节点，例如 dcmenu.admin；由当前服务器权限系统决定玩家是否拥有。
+    conditions: {type: permission, permission: dcmenu.admin} # 仅保护本教学按钮，不是命令白名单。
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      - type: command
+        # executor：命令执行身份：player 玩家原权限，op 临时管理员（同步执行后恢复），console 服务器控制台。
+        executor: op # 同步分发期间临时 OP，finally 恢复原状态；不保证其他插件延迟任务仍是 OP。
+        # command：命令名称/命令文本，按当前模型与 arguments 组合执行；不加开头 /，目标插件负责自身命令权限。
+        command: minecraft:tellraw
+        # arguments：命令参数列表，每个元素一个参数；与 command 一起分发。动态玩家输入受参数校验，不能注入额外命令。
+        arguments: ['{player}', '{"text":"来自临时 OP 的教学消息","color":"gold"}'] # JSON 作为一个固定片段。
+  # id：菜单根 id 要与文件名一致，只用小写字母、数字、下划线或连字符；按钮 id 在本菜单内唯一，建议沿用这些字符。
+  - id: console_message
+    # label：通常为控件或按钮显示文字，和 id/key 不同；若位于 player_data_set.value 自定义对象内，则只是普通业务数据。
+    label: '控制台身份发消息'
+    # actionType：原生按钮点击类型；custom 交给业务引擎处理条件/动作，close 只关闭。不要与动作链的 type 混淆。
+    actionType: custom
+    # conditions：本按钮成功动作执行前的条件；全部求值通过后才进入成功动作，解析错误会阻断交易。
+    # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+    # permission：需要检查的权限节点，例如 dcmenu.admin；由当前服务器权限系统决定玩家是否拥有。
+    conditions: {type: permission, permission: dcmenu.admin}
+    # actions：菜单根下表示按钮列表；按钮内表示成功动作链，按顺序执行。二者不是同一层结构。
+    actions:
+      # type：本段具体类型；正文、输入、条件和动作各有不同类型，不可互换。紧邻示例值决定本段用途。
+      - type: command
+        # executor：命令执行身份：player 玩家原权限，op 临时管理员（同步执行后恢复），console 服务器控制台。
+        executor: console # 没有玩家坐标；显式指定目标玩家。
+        # command：命令名称/命令文本，按当前模型与 arguments 组合执行；不加开头 /，目标插件负责自身命令权限。
+        command: minecraft:tellraw
+        # arguments：命令参数列表，每个元素一个参数；与 command 一起分发。动态玩家输入受参数校验，不能注入额外命令。
+        arguments: ['{player}', '{"text":"来自控制台的教学消息","color":"aqua"}']
