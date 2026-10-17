@@ -16,6 +16,7 @@ python -m venv build/docs-venv
 
 ```powershell
 ./build/docs-venv/Scripts/python.exe -m mkdocs build --strict
+./build/docs-venv/Scripts/python.exe scripts/verify-docs-site.py
 ```
 
 生成的 `site/` 已加入忽略规则，不提交到源码分支。网站使用内置系统字体，不依赖 Google Fonts。
