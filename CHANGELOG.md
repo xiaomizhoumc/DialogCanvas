@@ -32,7 +32,3 @@ First stable public release.
 - The browser preview is approximate; final rendering must be checked in a compatible client.
 - A real economy provider is required in addition to a Vault-compatible bridge for transactions.
 - Original-client visuals and real Vault/PlaceholderAPI transaction flows still require operator-side verification.
-
-## [0.1.0] - 2026-10-16
-
-Internal Stage 10.5 acceptance baseline used to validate the runtime before the public 1.0.0 version declaration.
